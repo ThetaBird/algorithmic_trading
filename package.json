@@ -1,0 +1,19 @@
+{
+  "name": "algorithmic_trading",
+  "version": "1.0.0",
+  "description": "Exploring Trading Strategies and Methodologies With An Automated Algorithmic Application",
+  "main": "src/server/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThetaBird/algorithmic_trading.git"
+  },
+  "author": "Max Jikharev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThetaBird/algorithmic_trading/issues"
+  },
+  "homepage": "https://github.com/ThetaBird/algorithmic_trading#readme"
+}
