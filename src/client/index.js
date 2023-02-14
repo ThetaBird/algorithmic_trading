@@ -12,40 +12,18 @@ const getCandlesticks = async (symbol, timeframe) => {
     return [];
 }
 
-const init = async () => {
-    const symbols = await getGeminiSymbols();
-    console.log(symbols)
-}
-
-init();
 
 
-
-var chart = JSC.chart('chartDiv', {
+const chartOptions = {
     debug: true,
     type: 'candlestick',
     palette: 'fiveColor18',
     legend: {
       template: '%icon %name',
-      position: 'inside top left'
+      position: 'outside top'
     },
     yAxis: {
       formatString: 'c',
-      markers: [
-        /* The legend entry is unified into only the support marker to represent both support and resistance. */
-        {
-          value: 102.2,
-          color: 'crimson',
-          label: { text: 'Resistance', align: 'center' },
-          legendEntry_visible: false
-        },
-        {
-          value: 91,
-          color: 'crimson',
-          label: { text: 'Support', align: 'center' },
-          legendEntry_name: 'Support/Resistance'
-        }
-      ]
     },
     xAxis_crosshair_enabled: true,
     defaultPoint: {
@@ -67,9 +45,20 @@ var chart = JSC.chart('chartDiv', {
         ]
       }
     ]
-  });
+}
+
+const createChart = (name, points) => {
+    JSC.chart('chartDiv', {
+        ...chartOptions,
+        series:[
+            {name, points}
+        ]
+    });
+}
+
+
+
   function tooltip(point) {
-    console.log(point)
     var color = point.options('close') > point.options('open') ? 'green' : 'red';
     return (
       'Change: <span style="color:' +
@@ -77,3 +66,40 @@ var chart = JSC.chart('chartDiv', {
       '">{%close-%open}</span><br>Open: %open<br/>High: %high<br/>Low: %low<br/>Close: %close'
     );
   }
+
+let targetSymbol = "btcusd";
+let targetTimeblock = "1day";
+
+const update = async () => {
+    const candlesticks = await getCandlesticks(targetSymbol, targetTimeblock);
+    if(!candlesticks) return;
+
+    createChart(targetSymbol, candlesticks)
+}
+
+
+
+const init = async () => {
+    const symbols = await getGeminiSymbols();
+    for(const symbol of symbols){
+        $('#symbols').append(`<option value="${symbol}">${symbol}</option>`)
+    }
+
+    update();
+}
+
+
+
+//1m, 5m, 15m, 30m, 1hr, 6hr, 1day
+
+init();
+
+$("#symbols").on("change", function(){
+    targetSymbol = this.value;
+    update()
+})
+
+$("#timeblocks").on("change", function(){
+    targetTimeblock = this.value;
+    update()
+})
