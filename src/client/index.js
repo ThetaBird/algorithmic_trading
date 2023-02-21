@@ -69,12 +69,22 @@ const createChart = (name, points) => {
 
 let targetSymbol = "btcusd";
 let targetTimeblock = "1day";
+let targetCandlesticks = [];
+let targetPercentage = [];
 
-const update = async () => {
-    const candlesticks = await getCandlesticks(targetSymbol, targetTimeblock);
-    if(!candlesticks) return;
 
-    createChart(targetSymbol, candlesticks)
+const update = async (updateCandlesticks = false) => {
+    if(updateCandlesticks) targetCandlesticks = await getCandlesticks(targetSymbol, targetTimeblock);
+    if(!targetCandlesticks.length) return;
+
+    
+
+    const candleLen = targetCandlesticks.length;
+    const leftTargetSpliceIndx = Math.floor(candleLen - candleLen * targetPercentage[1]/100);
+    const rightTargetSpliceIndx = Math.floor(candleLen - candleLen * targetPercentage[0]/100);
+    
+    const displayCandlesticks = targetCandlesticks.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
+    createChart(targetSymbol, displayCandlesticks)
 }
 
 
@@ -96,10 +106,28 @@ init();
 
 $("#symbols").on("change", function(){
     targetSymbol = this.value;
-    update()
+    update(true)
 })
 
 $("#timeblocks").on("change", function(){
     targetTimeblock = this.value;
-    update()
+    update(true)
 })
+
+const slider = document.getElementById('slider');
+
+noUiSlider.create(slider, {
+    start: [70, 100],
+    connect: true,
+    behaviour: "drag-smooth-steps",
+    step:10,
+    range: {
+        'min': 0,
+        'max': 100
+    }
+});
+
+slider.noUiSlider.on('update', (values) => {
+  targetPercentage = values
+  update();
+});
