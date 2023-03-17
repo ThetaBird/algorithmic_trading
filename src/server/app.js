@@ -10,11 +10,18 @@ const app = express();
 
 let publicPath = path.resolve(__dirname, "csv");
 app.use(express.static(publicPath));
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    next();
+})
+
+const convertSavedCandle = (candle) => {
+    return candle.split(",").map((element, indx) => indx ? parseFloat(element) : parseInt(element))
+}
 
 app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
     const {ticker, timeframe} = req.params;
     const filename = `${publicPath}/${ticker}_${timeframe}.csv`;
-    console.log(filename)
     const fileExists = fs.existsSync(filename);
     if(!fileExists){
         const candlesticks = await getCandlesticks(ticker, timeframe);
@@ -25,7 +32,7 @@ app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
 
     const candlesticks = fs.readFileSync(filename, {encoding:'utf8'});
 
-    res.status(200).send(candlesticks.split("\n").map(candle => candle.split(",")))
+    res.status(200).send(candlesticks.split("\n").map(candle => convertSavedCandle(candle)))
     
 })
 

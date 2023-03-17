@@ -1,13 +1,14 @@
-const apiURL = "https://api.gemini.com"
+const geminiApiURL = "https://api.gemini.com"
+const apiURL = "http://localhost:8080/api"
 
 const getGeminiSymbols = async () => {
-    const {status, data} = await axios.get(`${apiURL}/v1/symbols`)
+    const {status, data} = await axios.get(`${geminiApiURL}/v1/symbols`)
     if(status == 200) return data;
     return [];
 }
 
 const getCandlesticks = async (symbol, timeframe) => {
-    const {status, data} = await axios.get(`${apiURL}/v2/candles/${symbol}/${timeframe}`)
+    const {status, data} = await axios.get(`${apiURL}/v1/${symbol}/${timeframe}`)
     if(status == 200) return data;
     return [];
 }
