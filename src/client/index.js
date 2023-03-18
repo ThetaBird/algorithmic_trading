@@ -69,7 +69,7 @@ const createChart = (name, points) => {
     return (
       'Change: <span style="color:' +
       color +
-      '">{%close-%open}</span><br>Open: %open<br/>High: %high<br/>Low: %low<br/>Close: %close'
+      '">{%close-%open}({100*(%close-%open)/%open}%)</span><br>Open: %open<br/>High: %high<br/>Low: %low<br/>Close: %close'
     );
   }
 
@@ -99,7 +99,7 @@ const init = async () => {
     const symbols = await getGeminiSymbols();
     for(const symbol of symbols){
         $('#symbols').append(`<option value="${symbol}">${symbol}</option>`)
-        console.log(`Spamming ${symbol}`)
+        //console.log(`Spamming ${symbol}`)
         //spamRequests(symbol);
     }
 

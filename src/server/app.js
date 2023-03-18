@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs-extra");
 const axios = require("axios");
 
 const PORT = 8080;
@@ -23,11 +23,12 @@ app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
     const {ticker, timeframe} = req.params;
     try{
         
-        const filename = `${publicPath}/${ticker}_${timeframe}.csv`;
+        const filename = `${publicPath}\\${ticker}\\${timeframe}\\candles.csv`;
+        console.log(filename)
         const fileExists = fs.existsSync(filename);
         if(!fileExists){
             const candlesticks = await getCandlesticks(ticker, timeframe);
-            if(candlesticks.length) fs.writeFile(filename, candlesticks.map(candle => candle.join(",")).join("\n"), () => {})
+            if(candlesticks.length) fs.outputFile(filename, candlesticks.map(candle => candle.join(",")).join("\n"))
             res.status(200).send(candlesticks);
             return;
         }
@@ -35,7 +36,10 @@ app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
         const candlesticks = fs.readFileSync(filename, {encoding:'utf8'});
 
         res.status(200).send(candlesticks.split("\n").map(candle => convertSavedCandle(candle)))
-    }catch(error){res.status(400).send(`${ticker}/${timeframe} failed.`)}
+    }catch(error){
+        console.log(error)
+        res.status(400).send(`${ticker}/${timeframe} failed.`)
+    }
     
     
 })
