@@ -5,11 +5,17 @@ CSE392 Project • Exploring Trading Strategies and Methodologies With An Automa
 ```dir
 .
 ├── src                         # full source code directory
-│   ├── client                  # backend source code directory
-│   │   └── index.js            # backend start point
 │   │
-│   └── server                  # frontend source code directory
-│       └── app.js              # frontend start point (temp file for git purposes) 
+│   ├── client                  # frontend source code directory
+│   │   ├── index.html          # frontend html file
+│   │   ├── index.js            # frontend js file
+│   │   ├── nouislider.min.css  # css file for lightweight slider for data visualization
+│   │   └── nouislider.min.js   # js file for lightweight slider for data visualization
+│   │
+│   └── server                  # backend source code directory
+│       ├── csv                 # directory holding csv files of candlestick & indicator data
+│       ├── indicators          # directory holding python scripts for indicator generation
+│       └── app.js              # backend start point
 │
 ├── .gitignore
 ├── package-lock.json 
