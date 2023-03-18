@@ -21,18 +21,22 @@ const convertSavedCandle = (candle) => {
 
 app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
     const {ticker, timeframe} = req.params;
-    const filename = `${publicPath}/${ticker}_${timeframe}.csv`;
-    const fileExists = fs.existsSync(filename);
-    if(!fileExists){
-        const candlesticks = await getCandlesticks(ticker, timeframe);
-        if(candlesticks.length) fs.writeFile(filename, candlesticks.map(candle => candle.join(",")).join("\n"), () => {})
-        res.status(200).send(candlesticks);
-        return;
-    }
+    try{
+        
+        const filename = `${publicPath}/${ticker}_${timeframe}.csv`;
+        const fileExists = fs.existsSync(filename);
+        if(!fileExists){
+            const candlesticks = await getCandlesticks(ticker, timeframe);
+            if(candlesticks.length) fs.writeFile(filename, candlesticks.map(candle => candle.join(",")).join("\n"), () => {})
+            res.status(200).send(candlesticks);
+            return;
+        }
 
-    const candlesticks = fs.readFileSync(filename, {encoding:'utf8'});
+        const candlesticks = fs.readFileSync(filename, {encoding:'utf8'});
 
-    res.status(200).send(candlesticks.split("\n").map(candle => convertSavedCandle(candle)))
+        res.status(200).send(candlesticks.split("\n").map(candle => convertSavedCandle(candle)))
+    }catch(error){res.status(400).send(`${ticker}/${timeframe} failed.`)}
+    
     
 })
 

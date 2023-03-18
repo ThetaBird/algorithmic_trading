@@ -13,7 +13,12 @@ const getCandlesticks = async (symbol, timeframe) => {
     return [];
 }
 
+const spamRequests = async (symbol) => {
+  const timeframes = ["1m","5m","15m","30m","1hr","6hr","1day"]
 
+  timeframes.forEach(time => axios.get(`${apiURL}/v1/${symbol}/${time}`))
+  
+}
 
 const chartOptions = {
     debug: true,
@@ -94,6 +99,8 @@ const init = async () => {
     const symbols = await getGeminiSymbols();
     for(const symbol of symbols){
         $('#symbols').append(`<option value="${symbol}">${symbol}</option>`)
+        console.log(`Spamming ${symbol}`)
+        //spamRequests(symbol);
     }
 
     update();
