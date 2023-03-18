@@ -44,5 +44,24 @@ plotly.com (Interactive, and has some financial functionality, but seems unpolis
 
 ### Brainstorming Tech Stack for analyzer
 ```
-TBD
+Quant Researchers implement algorithmic prototypes for trading strategies (usually) in Python or R due to their respective simplicities and well-supported data manipulation libraries.
+Quant Developers replicate the researched prototypes in a more computationally strong language, such as C/C++, Rust, or (less commonly) Java.
+
+Because the purpose of this project is to explore trading methodologies, my role aligns more closely with the former. I have experience in both Python and R, but I've known Python for longer and already am familiar with some of the vast number of libraries available for data analysis.
+Hence,
+
+> Analyzers: Python
+
+The analyzers will be in the form of a python script; one for each indicator or decision flag generator. The NodeJS runtime will call these python scripts to execute upon request. Each script would obtain all relevant data from the stored .csv files, perform all necessary calculations, and output all relevant results in a new .csv file. The NodeJS runtime will then be able to pull the data from the csv file, send it to the client, which can then display everything in a graph.  
+```
+
+### Brainstorming Initial Trading Indicator/Strategy
+```
+> [Heiken-Ashi](https://www.investopedia.com/trading/heikin-ashi-better-candlestick/)
+
+I have chosen the Heiken-Ashi formula as the first test candidate for the following reasons:
+- It is relatively simple
+- It works for any market
+- It essentially just reduces the noise in the candlesticks, making it easier to identify trends
+- There are several trading strategies that use Heiken-Ashi to enforce only a few rules in order to make trading decisions (this will make decision flag implementation simpler in the future)
 ```
