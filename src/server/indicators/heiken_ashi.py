@@ -48,7 +48,7 @@ def heiken_ashi(candles):
         open = np.average([prevCandle.open, prevCandle.close])
         high = np.max([candle.high, candle.open, candle.close])
         low = np.min([candle.low, candle.open, candle.close])
-        ha_candle = Candle([candle.time, open, high, low, close, candle.volume])
+        ha_candle = Candle([candle.time, close, high, low, open, candle.volume])
         ha_candles = np.append(ha_candles, ha_candle)
         prevCandle = candle
 

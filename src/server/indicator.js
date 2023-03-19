@@ -13,8 +13,8 @@ const getIndicator = async (ticker, timeframe, indicator) => {
         console.log({data});
     }
 
-    //const indicatorData = fs.readFileSync(filename, {encoding:'utf8'});
-    //return indicatorData;
+    const indicatorData = fs.readFileSync(filename, {encoding:'utf8'});
+    return indicatorData;
 }
 
 const runIndicator = async (ticker, timeframe, indicator) => {

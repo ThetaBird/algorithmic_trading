@@ -10,7 +10,7 @@ const getGeminiSymbols = async () => {
 const getCandlesticks = async (symbol, timeframe) => {
     const {status, data} = await axios.get(`${apiURL}/v1/${symbol}/${timeframe}`)
     if(status == 200) return data;
-    return [];
+    return {};
 }
 
 const spamRequests = async (symbol) => {
@@ -53,12 +53,20 @@ const chartOptions = {
     ]
 }
 
-const createChart = (name, points) => {
+
+const createChart = (name, points, heiken) => {
     JSC.chart('chartDiv', {
-        ...chartOptions,
-        series:[
-            {name, points}
-        ]
+      ...chartOptions,
+      series:[
+          {name, points}
+      ]
+    });
+
+    JSC.chart('heikenDiv', {
+      ...chartOptions,
+      series:[
+          {name:`${name}_heikenashi`, points: heiken}
+      ]
     });
 }
 
@@ -76,11 +84,17 @@ const createChart = (name, points) => {
 let targetSymbol = "btcusd";
 let targetTimeblock = "1day";
 let targetCandlesticks = [];
+let targetHeiken = [];
 let targetPercentage = [];
 
 
 const update = async (updateCandlesticks = false) => {
-    if(updateCandlesticks) targetCandlesticks = await getCandlesticks(targetSymbol, targetTimeblock);
+    if(updateCandlesticks){
+      target = await getCandlesticks(targetSymbol, targetTimeblock);
+      console.log(target)
+      targetCandlesticks = target.candlesticks;
+      targetHeiken = target.heiken;
+    }
     if(!targetCandlesticks.length) return;
 
     
@@ -90,7 +104,8 @@ const update = async (updateCandlesticks = false) => {
     const rightTargetSpliceIndx = Math.floor(candleLen - candleLen * targetPercentage[0]/100);
     
     const displayCandlesticks = targetCandlesticks.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
-    createChart(targetSymbol, displayCandlesticks)
+    const displayHeiken = targetHeiken.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
+    createChart(targetSymbol, displayCandlesticks, displayHeiken)
 }
 
 

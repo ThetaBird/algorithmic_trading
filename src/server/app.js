@@ -22,7 +22,7 @@ const convertSavedCandle = (candle) => {
 
 app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
     const {ticker, timeframe} = req.params;
-    const {indicator} = req.query
+    //const {indicator} = req.query
     try{
         
         const filename = `${publicPath}\\${ticker}\\${timeframe}\\candles.csv`;
@@ -35,9 +35,10 @@ app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
             return;
         }
 
-        const candlesticks = fs.readFileSync(filename, {encoding:'utf8'});
-
-        res.status(200).send(candlesticks.split("\n").map(candle => convertSavedCandle(candle)))
+        const candlesticks = fs.readFileSync(filename, {encoding:'utf8'}).split("\n").map(candle => convertSavedCandle(candle));
+        const heikenData = await getIndicator(ticker, timeframe, "heiken_ashi")
+        const heiken = heikenData.split("\n").map(candle => convertSavedCandle(candle));
+        res.status(200).send({candlesticks, heiken})
     }catch(error){
         console.log(error)
         res.status(400).send(`${ticker}/${timeframe} failed.`)
@@ -54,4 +55,4 @@ const getCandlesticks = async (symbol, timeframe) => {
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
-getIndicator("btcusd","1m","heiken_ashi")
+//getIndicator("btcusd","1m","heiken_ashi")
