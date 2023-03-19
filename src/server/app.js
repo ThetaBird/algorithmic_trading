@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs-extra");
 const axios = require("axios");
+const { getIndicator } = require("./indicator");
 
 const PORT = 8080;
 const APIURL = "https://api.gemini.com"
@@ -21,6 +22,7 @@ const convertSavedCandle = (candle) => {
 
 app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
     const {ticker, timeframe} = req.params;
+    const {indicator} = req.query
     try{
         
         const filename = `${publicPath}\\${ticker}\\${timeframe}\\candles.csv`;
@@ -51,3 +53,5 @@ const getCandlesticks = async (symbol, timeframe) => {
 }
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+getIndicator("btcusd","1m","heiken_ashi")
