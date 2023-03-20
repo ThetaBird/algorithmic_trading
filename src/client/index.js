@@ -143,7 +143,7 @@ noUiSlider.create(slider, {
     start: [70, 100],
     connect: true,
     behaviour: "drag-smooth-steps",
-    step:10,
+    step:1,
     range: {
         'min': 0,
         'max': 100

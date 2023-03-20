@@ -31,7 +31,7 @@ def init():
         heiken_ashi_candles = heiken_ashi(candles)
         writer = csv.writer(csvfile, quoting = csv.QUOTE_NONNUMERIC)
         for candle in heiken_ashi_candles:
-            row = [candle.time, candle.open, candle.high, candle.low, candle.close, candle.volume]
+            row = [candle.time, candle.close, candle.high, candle.low, candle.open, candle.volume]
             writer.writerow(row)
 
     sys.stdout.flush()
@@ -45,10 +45,10 @@ def heiken_ashi(candles):
     prevCandle = candles[0]
     for candle in candles[1:] :
         close = np.mean(([candle.open, candle.close, candle.high, candle.low]))
-        open = np.average([prevCandle.open, prevCandle.close])
-        high = np.max([candle.high, candle.open, candle.close])
-        low = np.min([candle.low, candle.open, candle.close])
-        ha_candle = Candle([candle.time, close, high, low, open, candle.volume])
+        open = np.mean([prevCandle.open, prevCandle.close])
+        high = max(candle.high, open, close)
+        low = min(candle.low, open, close)
+        ha_candle = Candle([candle.time, open, high, low, close, candle.volume])
         ha_candles = np.append(ha_candles, ha_candle)
         prevCandle = candle
 
