@@ -6,6 +6,3 @@ class Candle:
     self.low = l[3]
     self.close = l[4]
     self.volume = l[5]
-
-def get(l):
-  return Candle(l)

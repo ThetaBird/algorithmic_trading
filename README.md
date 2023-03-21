@@ -4,25 +4,35 @@ CSE392 Project • Exploring Trading Strategies and Methodologies With An Automa
 ### Directory Structure
 ```dir
 .
-├── src                         # full source code directory
+├── src                                 # full source code directory
 │   │
-│   ├── client                  # frontend source code directory
-│   │   ├── index.html          # frontend html file
-│   │   ├── index.js            # frontend js file
-│   │   ├── nouislider.min.css  # css file for lightweight slider for data visualization
-│   │   └── nouislider.min.js   # js file for lightweight slider for data visualization
+│   ├── client                          # frontend source code directory
+│   │   ├── index.html                  # frontend html file
+│   │   ├── index.js                    # frontend js file
+│   │   ├── nouislider.min.css          # css file for lightweight slider for data visualization
+│   │   └── nouislider.min.js           # js file for lightweight slider for data visualization
 │   │
-│   └── server                  # backend source code directory
-│       ├── csv                 # directory holding csv files of candlestick & indicator data
-│       ├── indicators          # directory holding python scripts for indicator generation
-│       └── app.js              # backend start point
+│   └── server                          # backend source code directory
+│       ├── csv                         # directory holding csv files of candlestick & indicator data
+│       ├── py
+│       │   ├── __pycache__     
+│       │   ├── analyzers               # directory holding python scripts for decision flag generators
+│       │   │
+│       │   ├── indicators              # directory holding python scripts for indicator generation
+│       │   │   ├── __pycache__
+│       │   │   ├── heiken_ashi.py      # heiken ashi candlestick generator file
+│       │   │   └── indicator.py        # python called by node.js runtime, decides which indicator program to run.
+│       │   └── common.py               # python module containing common classes and methods imported by most files.
+│       │ 
+│       ├── app.js                      # backend start point
+│       └── indicator.js                # backend helper file, decides whether or not to generate new indicator values by running indicator.py.
 │
 ├── .gitignore
 ├── package-lock.json 
 ├── package.json
-├── Problem_Statement.pdf       # PDF outlining initial project problem statment                
-├── README.md                   # You are here
-└── Timeline.pdf                # PDF outlining initial expectation timeline
+├── Problem_Statement.pdf               # PDF outlining initial project problem statment                
+├── README.md                           # You are here
+└── Timeline.pdf                        # PDF outlining initial expectation timeline
 ```
 
 ### Brainstorming Free Data Sources
@@ -70,4 +80,8 @@ I have chosen the Heiken-Ashi formula as the first test candidate for the follow
 - It works for any market
 - It essentially just reduces the noise in the candlesticks, making it easier to identify trends
 - There are several trading strategies that use Heiken-Ashi to enforce only a few rules in order to make trading decisions (this will make decision flag implementation simpler in the future)
+```
+
+### Brainstorming Initial Decision Flag Analyzer
+```
 ```
