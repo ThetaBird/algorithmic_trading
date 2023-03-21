@@ -20,8 +20,7 @@ const runIndicator = async (ticker, timeframe, indicator) => {
 
     const pythonProcess = spawn('python',[indicatorFilename, dirPath]);
 
-    return new Promise((resolve, reject) => {
-        console.log("Trying to resolve")
+    return new Promise((resolve) => {
         pythonProcess.stdout.on('data', (data) => {
             resolve()
         });

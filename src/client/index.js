@@ -115,7 +115,7 @@ const init = async () => {
     for(const symbol of symbols){
         $('#symbols').append(`<option value="${symbol}">${symbol}</option>`)
         //console.log(`Spamming ${symbol}`)
-        //spamRequests(symbol);
+        spamRequests(symbol);
     }
 
     update();
