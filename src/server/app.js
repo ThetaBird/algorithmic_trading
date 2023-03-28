@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs-extra");
 const axios = require("axios");
 const { getIndicator } = require("./indicator");
+const { getAnalyzer } = require("./analyzer");
 
 const PORT = 8080;
 const APIURL = "https://api.gemini.com"
@@ -37,6 +38,9 @@ app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
 
         const candlesticks = fs.readFileSync(filename, {encoding:'utf8'}).split("\n").map(candle => convertSavedCandle(candle));
         const heikenData = await getIndicator(ticker, timeframe, "heiken_ashi")
+        
+        getAnalyzer(ticker, timeframe, "ha_analyzer")
+        
         const heiken = heikenData.split("\n").map(candle => convertSavedCandle(candle));
         res.status(200).send({candlesticks, heiken})
     }catch(error){
