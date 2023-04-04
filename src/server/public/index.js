@@ -1,5 +1,5 @@
 const geminiApiURL = "https://api.gemini.com"
-const apiURL = "http://localhost:8080/api"
+const apiURL = `${window.location.origin}/api`
 
 const getGeminiSymbols = async () => {
     const {status, data} = await axios.get(`${geminiApiURL}/v1/symbols`)

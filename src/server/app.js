@@ -5,7 +5,7 @@ const axios = require("axios");
 const { getIndicator } = require("./indicator");
 const { getAnalyzer } = require("./analyzer");
 
-const PORT = 8080;
+const PORT = 3031;
 const APIURL = "https://api.gemini.com"
 const app = express();
 
