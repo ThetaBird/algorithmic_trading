@@ -17,8 +17,11 @@ from common import Candle
 ANALYZER = sys.argv[1]
 CSVPATH = sys.argv[2]
 
+def convertDecisionToRow(d):
+    return [d.time, d.decision]
+
 def getAnalyzer(candles):
-    if(ANALYZER == "ha_analyzer"): return ha_analyzer(candles)
+    if(ANALYZER == "ha_analyzer"): return map(convertDecisionToRow, ha_analyzer(candles))
 
 def init():
    
@@ -33,10 +36,12 @@ def init():
         analyzerRows = getAnalyzer(candles)
         writer = csv.writer(csvfile, quoting = csv.QUOTE_NONNUMERIC)
         for row in analyzerRows:
-            writer.writerow([row])
+            writer.writerow(row)
 
     sys.stdout.flush()
 
 
 
 init()
+
+# python src/server/py/analyzers/analyze.py ha_analyzer C:\Users\Theta\Desktop\CSE392\repo\src\server\csv\btcusd\5m 

@@ -6,3 +6,8 @@ class Candle:
     self.low = l[3]
     self.close = l[4]
     self.volume = l[5]
+
+class Decision:
+  def __init__(self, l):
+    self.time = l[0]
+    self.decision = l[1]

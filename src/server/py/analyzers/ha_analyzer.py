@@ -1,8 +1,16 @@
 import numpy as np
+import sys
+import os
+
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+sys.path.append(parent)
+
+from common import Decision
 
 def ha_analyzer(candles):
    
-    decisions = np.array([0,0,0])
+    decisions = np.array([])
     currentDecision = 0
 
     LONG = np.array([0,1,1])
@@ -14,6 +22,9 @@ def ha_analyzer(candles):
     running = np.array([0,0,0])
 
     for candle in candles[3:]:
+        tempDecision = 0
+
+        time = candle.time
         running = np.delete(running, [0])
         running = np.append(running, ha_type(candle))
 
@@ -21,13 +32,14 @@ def ha_analyzer(candles):
         short_signal = np.array_equal(running, SHORT) or np.array_equal(running, SHORT2)
 
         if currentDecision != 1 and long_signal:
-            currentDecision = 1
-            decisions = np.append(decisions, 1) # enter long, leave short
+            tempDecision = currentDecision = 1 # enter long, leave short
         elif currentDecision != -1 and short_signal:
-            currentDecision = -1
-            decisions = np.append(decisions, -1) # enter short, leave long
-        else: decisions = np.append(decisions, 0) # hold
-        
+            tempDecision = currentDecision = -1 # leave long, enter short
+            
+        # else hold, keep temp @ 0
+
+        decisions = np.append(decisions, Decision([time, tempDecision]))
+
     return decisions
 
 def ha_type(candle):

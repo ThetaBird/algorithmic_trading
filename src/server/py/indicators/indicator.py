@@ -46,3 +46,5 @@ def init():
 
 
 init()
+
+# python src/server/py/indicators/indicator.py heiken_ashi C:\Users\Theta\Desktop\CSE392\repo\src\server\csv\btcusd\5m
