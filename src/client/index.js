@@ -20,6 +20,33 @@ const spamRequests = async (symbol) => {
   
 }
 
+const defaultXAxis = { 
+  crosshair_enabled: true, 
+  scale: { 
+    type: 'time'
+  }, 
+  defaultMarker: { 
+    label_offset: '0,-7', 
+    color: ['#2e75fe', 0.5] 
+  }, 
+  markers: [ 
+    { 
+      value: '11/15/2014', 
+      label_text: "Sell"
+    },
+
+    { 
+      value: '11/16/2014', 
+      label_text: "Buy"
+    },
+
+    { 
+      value: '11/17/2014', 
+      label_text: "Hold"
+    }
+  ] 
+}
+
 const chartOptions = {
     debug: true,
     type: 'candlestick',
@@ -28,10 +55,18 @@ const chartOptions = {
       template: '%icon %name',
       position: 'outside top'
     },
-    yAxis: {
-      formatString: 'c',
-    },
-    xAxis_crosshair_enabled: true,
+    yAxis: [
+      {
+        id: 'yMain', 
+        formatString: 'c', 
+        crosshair_enabled: true, 
+        orientation: 'opposite', 
+        scale: { range_padding: 0.1 }
+      },
+    ],
+    
+    //xAxis: {...defaultXAxis},
+
     defaultPoint: {
       outline_width: 0,
       altColor: '#ff4734',
@@ -49,17 +84,28 @@ const chartOptions = {
           ['11/17/2014', 93.14, 93.55, 91.52, 91.6, 12000],
           
         ]
-      }
+      },
     ]
 }
 
 
-const createChart = (name, points, heiken) => {
+const createChart = (name, points, heiken, ha_analyzer) => {
     JSC.chart('chartDiv', {
       ...chartOptions,
       series:[
-          {name, points}
-      ]
+          {name, points},
+      ],
+      
+      xAxis:{
+        ...defaultXAxis,
+        markers: ha_analyzer.filter(ha => Math.abs(ha[1])).map(ha => (
+          {
+            value: ha[0],
+            label_text: ha[1] == 1 ? "Long" : "Short"
+          }
+        ))
+      }
+      
     });
 
     JSC.chart('heikenDiv', {
@@ -86,6 +132,7 @@ let targetTimeblock = "1day";
 let targetCandlesticks = [];
 let targetHeiken = [];
 let targetPercentage = [];
+let targetHA_Analyzer = [];
 
 
 const update = async (updateCandlesticks = false) => {
@@ -94,6 +141,7 @@ const update = async (updateCandlesticks = false) => {
       console.log(target)
       targetCandlesticks = target.candlesticks;
       targetHeiken = target.heiken;
+      targetHA_Analyzer = target.ha_analyzer;
     }
     if(!targetCandlesticks.length) return;
 
@@ -105,7 +153,9 @@ const update = async (updateCandlesticks = false) => {
     
     const displayCandlesticks = targetCandlesticks.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
     const displayHeiken = targetHeiken.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
-    createChart(targetSymbol, displayCandlesticks, displayHeiken)
+    const displayHA_Analyzer = targetHA_Analyzer.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
+
+    createChart(targetSymbol, displayCandlesticks, displayHeiken, displayHA_Analyzer)
 }
 
 
@@ -140,7 +190,7 @@ $("#timeblocks").on("change", function(){
 const slider = document.getElementById('slider');
 
 noUiSlider.create(slider, {
-    start: [70, 100],
+    start: [90, 100],
     connect: true,
     behaviour: "drag-smooth-steps",
     step:1,

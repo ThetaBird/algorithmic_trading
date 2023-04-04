@@ -16,7 +16,7 @@ const getAnalyzer = async (ticker, timeframe, analyzer) => {
 
 const runAnalyzer = async (ticker, timeframe, analyzer) => {
     const dirPath = `${csvPath}\\${ticker}\\${timeframe}`;
-    const analyzerFilename = `${analyzerPath}\\analyzer.py`;
+    const analyzerFilename = `${analyzerPath}\\analyze.py`;
 
     const pythonProcess = spawn('python',[analyzerFilename, analyzer, dirPath]);
 
