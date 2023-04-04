@@ -10,7 +10,8 @@ const APIURL = "https://api.gemini.com"
 const app = express();
 
 
-let publicPath = path.resolve(__dirname, "csv");
+const csvPath = path.resolve(__dirname, "csv");
+const publicPath = path.resolve(__dirname, "public");
 app.use(express.static(publicPath));
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
@@ -26,7 +27,7 @@ app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
     //const {indicator} = req.query
     try{
         
-        const filename = `${publicPath}\\${ticker}\\${timeframe}\\candles.csv`;
+        const filename = `${csvPath}\\${ticker}\\${timeframe}\\candles.csv`;
         console.log(filename)
         const fileExists = fs.existsSync(filename);
         if(!fileExists){
