@@ -1,5 +1,6 @@
 const geminiApiURL = "https://api.gemini.com"
 const apiURL = `${window.location.origin}/api`
+const activeCharts = {};
 
 const getGeminiSymbols = async () => {
     const {status, data} = await axios.get(`${geminiApiURL}/v1/symbols`)
@@ -55,6 +56,7 @@ const chartOptions = {
       template: '%icon %name',
       position: 'outside top'
     },
+    animation: { duration: 400 },
     yAxis: [
       {
         id: 'yMain', 
@@ -90,7 +92,7 @@ const chartOptions = {
 
 
 const createChart = (name, points, heiken, ha_analyzer) => {
-    JSC.chart('chartDiv', {
+    activeCharts.main = JSC.chart('chartDiv', {
       ...chartOptions,
       series:[
           {name, points},
@@ -108,7 +110,7 @@ const createChart = (name, points, heiken, ha_analyzer) => {
       
     });
 
-    JSC.chart('heikenDiv', {
+    activeCharts.secondary = JSC.chart('heikenDiv', {
       ...chartOptions,
       series:[
           {name:`${name}_heikenashi`, points: heiken}
@@ -128,7 +130,7 @@ const createChart = (name, points, heiken, ha_analyzer) => {
   }
 
 let targetSymbol = "btcusd";
-let targetTimeblock = "1day";
+let targetTimeblock = "1m";
 let targetCandlesticks = [];
 let targetHeiken = [];
 let targetPercentage = [];
@@ -137,6 +139,7 @@ let targetHA_Analyzer = [];
 
 const update = async (updateCandlesticks = false) => {
     if(updateCandlesticks){
+      console.log("PULLING CANDLESTICKS")
       target = await getCandlesticks(targetSymbol, targetTimeblock);
       console.log(target)
       targetCandlesticks = target.candlesticks;
@@ -145,8 +148,8 @@ const update = async (updateCandlesticks = false) => {
     }
     if(!targetCandlesticks.length) return;
 
-    
-
+    console.log("update")
+    const old2 = Date.now()
     const candleLen = targetCandlesticks.length;
     const leftTargetSpliceIndx = Math.floor(candleLen - candleLen * targetPercentage[1]/100);
     const rightTargetSpliceIndx = Math.floor(candleLen - candleLen * targetPercentage[0]/100);
@@ -154,8 +157,25 @@ const update = async (updateCandlesticks = false) => {
     const displayCandlesticks = targetCandlesticks.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
     const displayHeiken = targetHeiken.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
     const displayHA_Analyzer = targetHA_Analyzer.slice(leftTargetSpliceIndx, rightTargetSpliceIndx);
+    console.log({diff2: Date.now() - old2})
 
+    evaluateAnalyzer(displayCandlesticks, displayHA_Analyzer)
+
+    const old = Date.now();
     createChart(targetSymbol, displayCandlesticks, displayHeiken, displayHA_Analyzer)
+    return console.log({diff: Date.now() - old})
+
+    if(!activeCharts.main)
+      return createChart(targetSymbol, displayCandlesticks, displayHeiken, displayHA_Analyzer)
+
+    updateChart("main", displayCandlesticks)
+    updateChart("secondary", displayHeiken)
+    
+}
+
+const updateChart = (name, points, points2) => {
+  const chart = activeCharts[name];
+  chart.series(0).options({ points });
 }
 
 
@@ -204,3 +224,49 @@ slider.noUiSlider.on('update', (values) => {
   targetPercentage = values
   update();
 });
+
+
+
+const evaluateAnalyzer = (displayCandle, displayAnalyzer) => {
+  const deltaTracker = {
+    win:[],
+    lose:[],
+  }
+
+  let numDecisions = 0;
+  const firstDecisionIndx = displayAnalyzer.findIndex(decision => decision != 0);
+  const decisionLength = displayAnalyzer.length;
+  
+  let lastPrice = -1;
+  let lastDecision = 0;
+  let lastDecisionIndx = 0;
+  let totalDelta = 1;
+
+  for(let i = firstDecisionIndx; i < decisionLength; i++){
+    const newDecision = displayAnalyzer[i][1]
+    if(newDecision == 0) continue;
+
+    numDecisions++;
+    lastDecisionIndx = i;
+    const newPrice = displayCandle[i][4] //close
+    
+
+    if(lastPrice == -1){
+      lastPrice = newPrice;
+      lastDecision = newDecision;
+      continue;
+    }
+    const delta = (newPrice - lastPrice) * lastDecision;
+    const delta_hat = delta/lastPrice;
+
+    if(delta_hat < 0) deltaTracker.lose.push(delta_hat)
+    else deltaTracker.win.push(delta_hat)
+
+    totalDelta += totalDelta * delta_hat
+  }
+
+  console.log(numDecisions);
+  console.log(deltaTracker);
+  console.log(totalDelta)
+  console.log((1 + (displayCandle[lastDecisionIndx][4] - displayCandle[firstDecisionIndx][4])/displayCandle[firstDecisionIndx][4]))
+}

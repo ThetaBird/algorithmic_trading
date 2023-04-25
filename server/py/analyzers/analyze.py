@@ -4,6 +4,7 @@ import numpy as np
 import os
 
 from ha_analyzer import ha_analyzer
+from ha_analyzer2 import ha_analyzer2
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -22,6 +23,7 @@ def convertDecisionToRow(d):
 
 def getAnalyzer(candles):
     if(ANALYZER == "ha_analyzer"): return map(convertDecisionToRow, ha_analyzer(candles))
+    if(ANALYZER == "ha_analyzer2"): return map(convertDecisionToRow, ha_analyzer2(candles))
 
 def init():
    

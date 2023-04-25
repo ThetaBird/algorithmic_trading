@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Stock Support Resistance Chart | JSCharting</title>
+    <meta http-equiv="content-type" content="text-html; charset=utf-8" />
+
+    <script src="https://code.jscharting.com/latest/jscharting.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="nouislider.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/throttled-queue@2.1.4/dist/throttledQueue.min.js"></script>
+
+    <link href="nouislider.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style></style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="chartContainer">
+        <select name="symbols" id="symbols"></select>
+
+        <select name="timeblocks" id="timeblocks">
+            <option value="1m">1 Minute</option>
+            <option value="5m">5 Minutes</option>
+            <option value="15m">15 Minutes</option>
+            <option value="30m">30 Minutes</option>
+            <option value="1hr">1 Hour</option>
+            <option value="6hr">6 Hours</option>
+            <option value="1day">1 Day</option>
+        </select>
+        
+        <div id="chartDiv" class="financial"></div>
+        <div id="slider"></div>
+        <div id="heikenDiv" class="financial"></div>
+      </div>
+
+      <div id="statContainer">
+        <table>
+          <tr>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+
+    <script src="./index.js"></script>
+  </body>
+</html>

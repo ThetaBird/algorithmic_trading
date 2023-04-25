@@ -1,0 +1,13 @@
+#slider{
+    width:740px;
+}
+
+.financial{
+    max-width: 740px;
+    height: 400px;
+    margin-left: 10px;
+}
+
+#container{
+    display:flex;
+}
