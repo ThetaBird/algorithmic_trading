@@ -39,12 +39,14 @@ app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
 
         const candlesticks = fs.readFileSync(filename, {encoding:'utf8'}).split("\n").map(candle => convertSavedCandle(candle));
         const heikenData = await getIndicator(ticker, timeframe, "heiken_ashi")
+        const stochasticData = await getIndicator(ticker, timeframe, "stochastic")
         
         const haData = await getAnalyzer(ticker, timeframe, "ha_analyzer2")
         
         const heiken = heikenData.split("\n").map(candle => convertSavedCandle(candle));
+        const stochastic = stochasticData.split("\n").map(triple => convertSavedCandle(triple));
         const ha_analyzer = haData.split("\n").map(candle => convertSavedCandle(candle));
-        res.status(200).send({candlesticks, heiken, ha_analyzer})
+        res.status(200).send({candlesticks, heiken, stochastic, ha_analyzer})
     }catch(error){
         console.log(error)
         res.status(400).send(`${ticker}/${timeframe} failed.`)

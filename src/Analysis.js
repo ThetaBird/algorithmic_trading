@@ -77,7 +77,7 @@ export default function Analysis(props){
 		lineStyle: 0,
 	}
     const displayWindow = [
-        {type:"area",data:basicPerformance, colors: basicColors, line:performanceReference},
+        {type:"area",data:basicPerformance, colors: basicColors, lines:[performanceReference]},
         {type:"area",data:stratPerformance, colors: stratColors},
     ]
     const winning = active.filter(trade => trade.delta_hat > 0)

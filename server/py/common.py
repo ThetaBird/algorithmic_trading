@@ -11,3 +11,14 @@ class Decision:
   def __init__(self, l):
     self.time = l[0]
     self.decision = l[1]
+
+class TimedValue:
+  def __init__(self, l):
+    self.time = l[0]
+    self.value = l[1]
+
+class TimedTuple:
+  def __init__(self, l):
+    self.time = l[0]
+    self.value1 = l[1]
+    self.value2 = l[2]

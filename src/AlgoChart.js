@@ -65,8 +65,18 @@ const algoChart = (chartContainerRef, type, dimensions) => {
     });
   }
 
-  const addArea = (chart, colors) => {
+  const addArea = (chart, colors, priceScaleId) => {
+    if(priceScaleId) chart.current.applyOptions({
+      rightPriceScale: {
+          visible: true,
+      },
+      leftPriceScale: {
+          visible: true,
+      },
+    });
+    const p = priceScaleId ? {priceScaleId} : {}
     return chart.current.addAreaSeries({
+        ...p,
         ...colors,
         lineWidth: 2,
       });
@@ -89,7 +99,7 @@ const algoChart = (chartContainerRef, type, dimensions) => {
       console.log(chart.current);
   
       for(const d of display){
-        const {type, data, markers, colors, line} = d;
+        const {type, data, markers, colors, lines, priceScaleId} = d;
         console.log({d})
         switch(type){
             case "candle":
@@ -99,9 +109,9 @@ const algoChart = (chartContainerRef, type, dimensions) => {
                 break;
             
             case "area":
-                const areaSeries = addArea(chart, colors);
+                const areaSeries = addArea(chart, colors, priceScaleId);
                 areaSeries.setData(data)
-                if(line) areaSeries.createPriceLine(line);
+                if(lines) lines.forEach(line => areaSeries.createPriceLine(line));
                 break;
         }
       }
