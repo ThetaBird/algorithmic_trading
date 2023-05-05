@@ -95,6 +95,11 @@ export default function Dashboard() {
         time: triple[0],
         value: triple[1]
       })).reverse();
+
+      const sData2 = stochastic.map(triple => ({
+        time: triple[0],
+        value: triple[2]
+      })).reverse();
     
       
 
@@ -117,7 +122,7 @@ export default function Dashboard() {
       
 
       primary = [{type:"candle",data:cData,markers:aData},]
-      secondary = [{type:"candle",data:hData}, {type:"area", data:sData1}]
+      secondary = [{type:"candle",data:hData}, {type:"area", data:sData1}, {type:"area", data:sData2}]
       evaluated = evaluateAnalyzer(primary);
       
       setChartData({...chartData, primary, secondary, evaluated});
@@ -133,9 +138,14 @@ export default function Dashboard() {
   }
 
   const sColors = {
-    topColor: 'rgba(152, 92, 255, 0.5)',
-    bottomColor: 'rgba(152, 92, 255, 0.04)',
+    topColor: 'rgba(152, 92, 255, 0)',
+    bottomColor: 'rgba(152, 92, 255, 0)',
     lineColor: 'rgba(152, 92, 255, 1)',
+  }
+  const s2Colors = {
+    topColor: 'rgba(164, 135, 171, 0)',
+    bottomColor: 'rgba(164, 135, 171, 0)',
+    lineColor: 'rgba(164, 135, 171, 1)',
   }
   const sTopLine = {
 		price: 80,
@@ -151,8 +161,9 @@ export default function Dashboard() {
 	}
 
   const displaySecondary = chartData.secondary[0] ? [{type:"candle",data:chartData.secondary[0].data.filter(candle => candle.time >= range.from && candle.time <= range.to)}] : []
-  const displaySecondaryStochastic = chartData.secondary[1] ? [{type:"area",data:chartData.secondary[1].data.filter(candle => candle.time >= range.from && candle.time <= range.to), colors:sColors, priceScaleId: 'left', lines:[sTopLine, sBottomLine]}] : []
-  console.log({displaySecondaryStochastic})
+  const displayStochastic = chartData.secondary[1] ? [{type:"area",data:chartData.secondary[1].data.filter(candle => candle.time >= range.from && candle.time <= range.to), colors:sColors, priceScaleId: 'left', lines:[sTopLine, sBottomLine]}] : []
+  const displayLongStochastic = chartData.secondary[2] ? [{type:"area",data:chartData.secondary[2].data.filter(candle => candle.time >= range.from && candle.time <= range.to), colors:s2Colors, priceScaleId: 'left'}] : []
+  console.log({displayStochastic})
   
   return (
     
@@ -175,7 +186,7 @@ export default function Dashboard() {
             
           </div>
           <div id="secondary-container">
-            {!!chartData.secondary.length && <AlgoChart setRange={setRange} display={[...displaySecondary, ...displaySecondaryStochastic]} chartContainerRef={secondaryContainerRef} chart={secondaryChartRef} activeRange={range} type={"secondary"} dimensions={dimensions}/>}
+            {!!chartData.secondary.length && <AlgoChart setRange={setRange} display={[...displaySecondary, ...displayStochastic, ...displayLongStochastic]} chartContainerRef={secondaryContainerRef} chart={secondaryChartRef} activeRange={range} type={"secondary"} dimensions={dimensions}/>}
           </div>
         </div>
         

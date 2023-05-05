@@ -71,7 +71,7 @@ const algoChart = (chartContainerRef, type, dimensions) => {
           visible: true,
       },
       leftPriceScale: {
-          visible: true,
+          visible: false,
       },
     });
     const p = priceScaleId ? {priceScaleId} : {}
