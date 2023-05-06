@@ -87,24 +87,24 @@ export default function Dashboard() {
         high: candle[2],
         low: candle[3],
         close: candle[4]
-      })).reverse();
+      }))//.reverse();
 
-      hData.shift()
+      //hData.shift()
 
       const sData1 = stochastic.map(triple => ({
         time: triple[0],
         value: triple[1]
-      })).reverse();
+      }))//.reverse();
 
       const sData2 = stochastic.map(triple => ({
         time: triple[0],
         value: triple[2]
-      })).reverse();
+      }))//.reverse();
     
       
 
       const aData = ha_analyzer
-        .filter(element => element[1] != 0).reverse()
+        .filter(element => element[1] != 0)//.reverse()
         .map(element => {
           const val = element[1];
           const long = (val == 1);
@@ -117,7 +117,7 @@ export default function Dashboard() {
           }
         });
 
-      aData.shift()
+      aData.pop()
 
       
 

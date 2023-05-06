@@ -20,7 +20,7 @@ INDICATOR = sys.argv[1]
 CSVPATH = sys.argv[2]
 
 def convertCandleToRow(candle):
-    return [candle.time, candle.close, candle.high, candle.low, candle.open, candle.volume]
+    return [candle.time, candle.open, candle.high, candle.low, candle.close, candle.volume]
 
 def convertTimedTupleToRow(timedValue):
     return [timedValue.time, timedValue.value1, timedValue.value2]
@@ -53,7 +53,7 @@ def init():
         print(len(candles))
 
     with open(f'{CSVPATH}\{INDICATOR}.csv', 'w+', newline = '') as csvfile:
-        indicatorRows = getIndicator(candles)
+        indicatorRows = getIndicator(candles[::-1])
         
         writer = csv.writer(csvfile, quoting = csv.QUOTE_NONNUMERIC)
         print(indicatorRows)
@@ -66,4 +66,5 @@ def init():
 
 init()
 
-# python server/py/indicators/indicator.py stochastic C:\Users\Theta\Desktop\CSE392\repo\src\server\csv\btcusd\5m
+# python server/py/indicators/indicator.py stochastic C:\Users\Theta\Desktop\CSE392\repo\server\csv\btcusd\5m
+# python server/py/indicators/indicator.py heiken_ashi C:\Users\Theta\Desktop\CSE392\repo\server\csv\btcusd\5m

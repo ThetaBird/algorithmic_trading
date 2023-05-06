@@ -4,21 +4,21 @@ const path = require("path");
 const csvPath = path.resolve(__dirname, "csv");
 const analyzerPath = path.resolve(__dirname, "py/analyzers");
 
-const getAnalyzer = async (ticker, timeframe, analyzer) => {
+const getAnalyzer = async (ticker, timeframe, analyzer, source) => {
     const filename = `${csvPath}\\${ticker}\\${timeframe}\\${analyzer}.csv`;
 
     const fileExists = fs.existsSync(filename);
-    if(!fileExists) await runAnalyzer(ticker, timeframe, analyzer);
+    if(!fileExists) await runAnalyzer(ticker, timeframe, analyzer, source);
 
     const analyzerData = fs.readFileSync(filename, {encoding:'utf8'});
     return analyzerData;
 }
 
-const runAnalyzer = async (ticker, timeframe, analyzer) => {
+const runAnalyzer = async (ticker, timeframe, analyzer, source) => {
     const dirPath = `${csvPath}\\${ticker}\\${timeframe}`;
     const analyzerFilename = `${analyzerPath}\\analyze.py`;
 
-    const pythonProcess = spawn('python',[analyzerFilename, analyzer, dirPath]);
+    const pythonProcess = spawn('python',[analyzerFilename, analyzer, dirPath, source]);
 
     return new Promise((resolve) => {
         pythonProcess.stdout.on('data', (data) => {
