@@ -3,6 +3,7 @@ CSE392 Project • Exploring Trading Strategies and Methodologies With An Automa
 
 ### Directory Structure
 ```dir
+├── Final_Report.pdf                    # PDF outlining completed project details
 ├── Problem_Statement.pdf               # PDF outlining initial project problem statment
 ├── README.md                           # You are here
 ├── Timeline.pdf                        # PDF outlining initial expectation timeline
