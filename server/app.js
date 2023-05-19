@@ -41,8 +41,8 @@ app.get("/api/v1/:ticker/:timeframe", async (req, res) => {
         const heikenData = await getIndicator(ticker, timeframe, "heiken_ashi")
         const stochasticData = await getIndicator(ticker, timeframe, "stochastic")
         
-        const haData = await getAnalyzer(ticker, timeframe, "ha_analyzer", "heiken_ashi")
-        //const haData = await getAnalyzer(ticker, timeframe, "st_analyzer", "stochastic")
+        //const haData = await getAnalyzer(ticker, timeframe, "ha_analyzer2", "heiken_ashi")
+        const haData = await getAnalyzer(ticker, timeframe, "st_analyzer2", "stochastic")
         
         const heiken = heikenData.split("\n").map(candle => convertSavedCandle(candle));
         const stochastic = stochasticData.split("\n").map(triple => convertSavedCandle(triple));

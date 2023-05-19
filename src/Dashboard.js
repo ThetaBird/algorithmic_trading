@@ -94,12 +94,12 @@ export default function Dashboard() {
       const sData1 = stochastic.map(triple => ({
         time: triple[0],
         value: triple[1]
-      }))//.reverse();
+      })).filter(s => s.value != null)//.reverse();
 
       const sData2 = stochastic.map(triple => ({
         time: triple[0],
         value: triple[2]
-      }))//.reverse();
+      })).filter(s => s.value != null)//.reverse();
     
       
 

@@ -6,6 +6,8 @@ import os
 from ha_analyzer import ha_analyzer
 from ha_analyzer2 import ha_analyzer2
 from st_analyzer import st_analyzer
+from st_analyzer2 import st_analyzer2
+from st_analyzer3 import st_analyzer3
 
 current = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.dirname(current)
@@ -28,6 +30,8 @@ def getAnalyzer(values):
     if(ANALYZER == "ha_analyzer"): return map(convertDecisionToRow, ha_analyzer(values))
     if(ANALYZER == "ha_analyzer2"): return map(convertDecisionToRow, ha_analyzer2(values))
     if(ANALYZER == "st_analyzer"): return map(convertDecisionToRow, st_analyzer(values))
+    if(ANALYZER == "st_analyzer2"): return map(convertDecisionToRow, st_analyzer2(values))
+    if(ANALYZER == "st_analyzer3"): return map(convertDecisionToRow, st_analyzer3(values))
 
 def getObject(row):
     if(SOURCECSV == "heiken_ashi"): return Candle(row)
@@ -56,5 +60,5 @@ def init():
 
 init()
 
-# python server/py/analyzers/analyze.py ha_analyzer C:\Users\Theta\Desktop\CSE392\repo\server\csv\btcusd\5m heiken_ashi
+# python server/py/analyzers/analyze.py ha_analyzer2 C:\Users\Theta\Desktop\CSE392\repo\server\csv\btcusd\5m heiken_ashi
 # python server/py/analyzers/analyze.py st_analyzer C:\Users\Theta\Desktop\CSE392\repo\server\csv\btcusd\5m stochastic
